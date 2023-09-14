@@ -113,6 +113,7 @@ public class Topic_04_Xpath {
         driver.findElement(By.id("txtPhone")).sendKeys("2234555440");
         driver.findElement(By.xpath("//div/button[@type='submit' and text() = \"ĐĂNG KÝ\"]")).click();
         Assert.assertEquals(driver.findElement(By.id("txtPhone-error")).getText(), "Số điện thoại bắt đầu bằng: 09 - 03 - 012 - 016 - 018 - 019 - 088 - 03 - 05 - 07 - 08");
+
     }
 
     @AfterClass
