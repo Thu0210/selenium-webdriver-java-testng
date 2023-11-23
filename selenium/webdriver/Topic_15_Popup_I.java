@@ -1,7 +1,9 @@
 package webdriver;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -25,7 +27,7 @@ public class Topic_15_Popup_I {
         driver.get("https://ngoaingu24h.vn/");
         driver.findElement(By.cssSelector("button.login_")).click();
         sleepInSecond(3);
-        By loginPopup= By.cssSelector("div[id='modal-login-v1'][style]>div");
+        By loginPopup = By.cssSelector("div[id='modal-login-v1'][style]>div");
         Assert.assertTrue(driver.findElement(loginPopup).isDisplayed());
         driver.findElement(By.cssSelector("div[id='modal-login-v1'][style] input#account-input")).sendKeys("AutomationFC");
         driver.findElement(By.cssSelector("div[id='modal-login-v1'][style] input#password-input")).sendKeys("AutomationFC");
@@ -83,14 +85,63 @@ public class Topic_15_Popup_I {
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         Assert.assertEquals(driver.findElements(By.xpath("//div[text()='Sign Up']/parent::div/parent::div")).size(), 0);
 
+    }
+
+    @Test
+    public void TC_05_Random_Popup_Not_In_DOM() {
+        driver.get("https://www.javacodegeeks.com/");
+        sleepInSecond(2);
+        By popupMarketing = By.cssSelector("div.lepopup-popup-container>div:not([style^='display:none'])");
+        if (driver.findElements(popupMarketing).size() > 0 && driver.findElements(popupMarketing).get(0).isDisplayed()) {
+            driver.findElement(By.cssSelector("div.lepopup-popup-container>div:not([style^='display:none']) div.lepopup-element-html-content>a")).click();
+            sleepInSecond(3);
+
+        }
+        driver.findElement(By.cssSelector("input#search-input")).sendKeys("Agile Testing Explained");
+        driver.findElement(By.cssSelector("button#search-submit")).click();
+        sleepInSecond(3);
+        Assert.assertTrue(driver.findElement(By.xpath("//a[text()='Agile Testing Explained']")).isDisplayed());
 
 
+    }
+
+    @Test
+    public void TC_06_Random_Popup_In_DOM() {
+        driver.get("https://vnk.edu.vn/");
+        sleepInSecond(20);
+        By marketingPopup = By.cssSelector("div.tve-leads-conversion-object");
+        if (driver.findElement(marketingPopup).isDisplayed()) {
+            driver.findElement(By.cssSelector("div.tcb-icon-display")).click();
+            sleepInSecond(3);
+        }
+        driver.findElement(By.cssSelector("button.btn-danger")).click();
+        sleepInSecond(3);
+        Assert.assertEquals(driver.findElement(By.cssSelector("div.title-content>h1")).getText(), "Lịch Khai Giảng");
+    }
+
+    @Test
+    public void TC_07_Random_Popup_Not_In_DOM() {
+        driver.get("https://dehieu.vn/");
+        sleepInSecond(3);
+        By marketingPopup = By.cssSelector("div.popup-content");
+        if (driver.findElements(marketingPopup).size() > 0 && driver.findElements(marketingPopup).get(0).isDisplayed()) {
+            int heightBrowser = driver.manage().window().getSize().getHeight();
+            if (heightBrowser < 1920) {
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("button#close-popup")));
+
+            } else {
+                driver.findElement(By.cssSelector("button#close-popup")).click();
+            }
+            sleepInSecond(3);
+
+        }
     }
 
     @AfterClass
     public void afterClass() {
         driver.quit();
     }
+
     public void sleepInSecond(long timeInSecond) {
         try {
             Thread.sleep(timeInSecond * 1000);
